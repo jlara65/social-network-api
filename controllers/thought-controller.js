@@ -1,31 +1,8 @@
 const { Thought, User } = require('../models');
 
 const thoughtController = {
-  getAllThought(req, res) {
-    Thought.find({})
-      .then((dbThoughtData) => res.json(dbThoughtData))
-      .catch((err) => {
-        console.log(err);
-        res.status(400).json(err);
-      });
-  },
-
-  getThoughtById({ params }, res) {
-    Thought.findOne({ _id: params.thought.id })
-      .then((dbThoughtData) => {
-        if (!dbThoughtData) {
-          res.status(404).json({ message: 'No thought found with this id!' });
-          return;
-        }
-        res.json(dbThoughtData);
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(400).json(err);
-      });
-  },
-
   addThought({ params, body }, res) {
+    console.log(body);
     Thought.create(body)
       .then(({ _id }) => {
         return User.findOneAndUpdate(
@@ -42,6 +19,29 @@ const thoughtController = {
         res.json(dbThoughtData);
       })
       .catch((err) => res.json(err));
+  },
+  getAllThought(req, res) {
+    Thought.find({})
+      .then((dbThoughtData) => res.json(dbThoughtData))
+      .catch((err) => {
+        console.log(err);
+        res.status(400).json(err);
+      });
+  },
+
+  getThoughtById({ params }, res) {
+    Thought.findOne({ _id: params.thoughtId })
+      .then((dbThoughtData) => {
+        if (!dbThoughtData) {
+          res.status(404).json({ message: 'No thought found with this id!' });
+          return;
+        }
+        res.json(dbThoughtData);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400).json(err);
+      });
   },
 
   updateThought({ params, body }, res) {
@@ -60,7 +60,7 @@ const thoughtController = {
       .catch((err) => res.json(err));
   },
   deleteThought({ params }, res) {
-    Thought.findAndDelete({ _id: params.thoughtId })
+    Thought.findOneAndDelete({ _id: params.thoughtId })
       .then((dbThoughtData) => {
         if (!dbThoughtData) {
           res.status(404).json({ message: 'No thought found!' });
