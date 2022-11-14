@@ -1,9 +1,11 @@
 const { Schema, model, Types } = require('mongoose');
 const dateFormat = require('../utils/dateFormat');
 
+// create reaction schema
 const ReactionSchema = new Schema(
   {
     reactionId: {
+      // set custom id to avoid confusion with parent thought id
       type: Schema.Types.ObjectId,
       default: () => new Types.ObjectId(),
     },
@@ -29,6 +31,7 @@ const ReactionSchema = new Schema(
   }
 );
 
+// create thought schema
 const ThoughtSchema = new Schema(
   {
     thoughtText: {
@@ -57,6 +60,7 @@ const ThoughtSchema = new Schema(
   }
 );
 
+// Document properties that do not store in the MongoDB database.
 ThoughtSchema.virtual('reactionCount').get(function () {
   return this.reactions.length;
 });

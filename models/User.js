@@ -1,10 +1,12 @@
 const { Schema, model, Types } = require('mongoose');
 
+// a function of validate the email input
 const validateEmail = (email) => {
   const re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   return re.test(email);
 };
 
+// create a user schema
 const UserSchema = new Schema(
   {
     username: {
@@ -45,6 +47,7 @@ const UserSchema = new Schema(
   }
 );
 
+// Document properties that do not store in the MongoDB database.
 UserSchema.virtual('friendCount').get(function () {
   return this.friends.length;
 });

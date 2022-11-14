@@ -1,6 +1,9 @@
 const { User, Thought } = require('../models');
 
 const userController = {
+  // retrieve all user's data
+  // /api/users
+
   getAllUser(req, res) {
     User.find({})
       .populate({
@@ -16,6 +19,8 @@ const userController = {
       });
   },
 
+  // get selected user by id
+  // /api/users/:id
   getUserById({ params }, res) {
     User.findOne({ _id: params.id })
       .populate({
@@ -36,12 +41,15 @@ const userController = {
       });
   },
 
+  // create user
   createUser({ body }, res) {
     User.create(body)
       .then((dbUserData) => res.json(dbUserData))
       .catch((err) => res.status(400).json(err));
   },
 
+  // update selected user by id
+  // /api/users/:id
   updateUser({ params, body }, res) {
     User.findOneAndUpdate({ _id: params.id }, body, {
       new: true,
@@ -56,6 +64,9 @@ const userController = {
       })
       .catch((err) => res.status(400).json(err));
   },
+
+  // add friend to friends list
+  // /api/users/:userId/friends/:friendId
 
   addFriend({ params, body }, res) {
     User.findOneAndUpdate(
@@ -73,13 +84,20 @@ const userController = {
       .catch((err) => res.json(err));
   },
 
+  // delete friend from friends list
+  // /api/users/:userId/friends/:friendId
+
   removeFriend({ params }, res) {
     User.findOneAndUpdate(
       { _id: params.userId },
       { $pull: { friends: params.friendId } },
       { new: true }
     )
-      .then((dbUserData) => res.json(dbUserData))
+      .then(() =>
+        res.json({
+          message: 'Selected friend has been removed from Friends list!',
+        })
+      )
       .catch((err) => res.json(err));
   },
 
